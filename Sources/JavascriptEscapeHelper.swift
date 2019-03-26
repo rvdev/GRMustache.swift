@@ -84,7 +84,7 @@ final class JavascriptEscapeHelper : MustacheBoxable {
         // The initial django commit used `\xNN` syntax. The \u syntax was
         // introduced later for JSON compatibility.
         
-        let escapeTable: [Character: String] = [
+        let escapeTable: [String: String] = [
             "\0": "\\u0000",
             "\u{01}": "\\u0001",
             "\u{02}": "\\u0002",
@@ -132,13 +132,11 @@ final class JavascriptEscapeHelper : MustacheBoxable {
             "\r\n": "\\u000D\\u000A",
         ]
         var escaped = ""
-        for c in string.characters {
-            if let escapedString = escapeTable[c] {
-                escaped += escapedString
-            } else {
-                escaped.append(c)
-            }
-        }
-        return escaped
+
+		escapeTable.forEach {
+			escaped = escaped.replacingOccurrences(of: $0.key, with: $0.value)
+		}
+
+		return escaped
     }
 }
