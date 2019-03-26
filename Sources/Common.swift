@@ -134,7 +134,7 @@ extension MustacheError : CustomStringConvertible {
         }
         
         if let message = message {
-            if description.characters.count > 0 {
+            if description.count > 0 {
                 description += ": \(message)"
             } else {
                 description = message
@@ -162,21 +162,19 @@ public typealias TagDelimiterPair = (String, String)
 ///
 /// - parameter string: A string.
 /// - returns: The HTML-escaped string.
-public func escapeHTML(_ string: String) -> String {
-    let escapeTable: [Character: String] = [
+public func escapeHTML(_ htmlString: String) -> String {
+    let escapeTable: [String: String] = [
         "<": "&lt;",
         ">": "&gt;",
         "&": "&amp;",
         "'": "&apos;",
         "\"": "&quot;",
     ]
-    var escaped = ""
-    for c in string.characters {
-        if let escapedString = escapeTable[c] {
-            escaped += escapedString
-        } else {
-            escaped.append(c)
-        }
-    }
-    return escaped
+    var escaped = htmlString
+	
+	escapeTable.forEach {
+		escaped = escaped.replacingOccurrences(of: $0.key, with: $0.value)
+	}
+
+	return escaped
 }
